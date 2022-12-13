@@ -1,8 +1,6 @@
 # Map Tracking Animation
-
-<img src="screenshot.png">
-
 DC Bus 96 Route Map Tracking Animation
+<img src="screenshot.png">
 
 ## Project Description
 This is a simple animation of a segment of the route for Bus 96 in Washington DC. This is a route that I used to take regularly, between the Adams Morgan and Bloomingdale neighborhoods. Data was pulled using the WMATA API and developer tools. Location data was extracted and cleaned up before implementing in the map animation.
