@@ -1,6 +1,6 @@
 # Map Tracking Animation
 
-<img src="screenshot.PNG">
+<img src="screenshot.png">
 
 DC Bus 96 Route Map Tracking Animation
 
