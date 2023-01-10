@@ -1,4 +1,4 @@
-# Map Tracking Animation
+# Real Time Bus Tracking Map Animation
 
 #### DC Bus 96 Route Map Tracking Animation
 
