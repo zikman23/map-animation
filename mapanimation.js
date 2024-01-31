@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiemlrbWFuIiwiYSI6ImNsYmpyeDVoZjB5cnozcGxjcmJkdWV5cHUifQ.TmKB9jKIfzvkdehpmGdoAQ';
+mapboxgl.accessToken = 'pk.eyJ1IjoiemlrbWFuIiwiYSI6ImNsYmpyeDVoZjB5cnozcGxjcmJkdWV5cHUifQ.TmKB9jKIfzvkdehpmGdoAQ'; // Replace with your Mapbox access token
 
 var map = new mapboxgl.Map({
   container: 'map',
@@ -7,30 +7,54 @@ var map = new mapboxgl.Map({
   zoom: 14,
 });
 
-var marker = new mapboxgl.Marker().setLngLat([-77.047591, 38.92324]).addTo(map);
+const wmataApiKey = 'f946f66f1cc649db821514c191673ea1'; // Your WMATA API Key
+const routeId = '96'; // The bus route ID you want to display
 
-const busStops = [
-  [-77.047591, 38.92324],
-  [-77.043425, 38.923209],
-  [-77.04282, 38.92298],
-  [-77.042559, 38.92231],
-  [-77.04165, 38.91799],
-  [-77.04164, 38.91682],
-  [-77.0387, 38.917009],
-  [-77.03686, 38.917],
-  [-77.034769, 38.917009],
-  [-77.03224, 38.917009],
-  [-77.02915, 38.917],
-  [-77.02735, 38.916969],
-  [-77.025948, 38.916992],
-];
+// Function to fetch bus stop data from WMATA API
+async function fetchBusStops() {
+  const url = `https://api.wmata.com/Bus.svc/json/jRouteDetails?RouteID=${routeId}`;
 
-let counter = 0;
+  try {
+    const response = await fetch(url, {
+      headers: {
+        api_key: wmataApiKey,
+      },
+    });
+
+    const data = await response.json();
+
+    // Get stops from Direction0 only
+    const stops = data.Direction0.Stops;
+    return stops;
+  } catch (error) {
+    console.error('Failed to fetch bus stops:', error);
+  }
+}
+
+// Define boundaries (example coordinates, replace with your desired boundaries)
+const lowerLeft = { lat: 38.913, lon: -77.045 };
+const upperRight = { lat: 38.93, lon: -77.0175 };
+
+// Check if a stop is within the defined boundaries
+function isInBounds(stop) {
+  return stop.Lat >= lowerLeft.lat && stop.Lat <= upperRight.lat && stop.Lon >= lowerLeft.lon && stop.Lon <= upperRight.lon;
+}
+
+// Updated function to update the map with new bus stops within the boundaries
+async function updateBusStops() {
+  const busStops = await fetchBusStops();
+
+  if (busStops) {
+    busStops.filter(isInBounds).forEach((stop) => {
+      new mapboxgl.Marker()
+        .setLngLat([stop.Lon, stop.Lat])
+        .setPopup(new mapboxgl.Popup().setText(`${stop.Name} (Lat: ${stop.Lat}, Lon: ${stop.Lon})`)) // Include lat/lon in the popup
+        .addTo(map);
+    });
+  }
+}
+
+// Modify the existing 'move' function to call updateBusStops
 function move() {
-  setTimeout(() => {
-    if (counter >= busStops.length) return;
-    marker.setLngLat(busStops[counter]);
-    counter++;
-    move();
-  }, 1000);
+  updateBusStops();
 }

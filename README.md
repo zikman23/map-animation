@@ -14,7 +14,7 @@ This is a simple animation of a segment of the route for Bus 96 in Washington DC
 
 ## Roadmap of Future Improvements
 
-The data was manually extracted using the WMATA API. I would like to implement and better way to access the data for this project. I would also like to implement live tracking of the bus locations, labels for the stops, and a line that traces the route shown for better visibility.
+The code has been updated to pull the bus stop location data fromt the WMATA API, as opposed to the manual data that was hardcode before. I have also added labels when clicking on each stop that show the stop name and the lat/lon info. Coming next is a line that traces the route shown for better visibility. Down the road, I might implement live tracking of the bus locations.
 
 ## Languages
 
